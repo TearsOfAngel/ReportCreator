@@ -7,7 +7,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Main {
@@ -15,6 +14,7 @@ public class Main {
     private static final Logger LOGGER = LogManager.getLogger(Logger.class.getName());
     private static final String USER_AGENT = ConfProperties.getProperty("user_agent");
     private static final String REFERRER = ConfProperties.getProperty("referrer");
+    private static final int EMPLOYEE_ID = Integer.parseInt(ConfProperties.getProperty("employee_id"));
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
@@ -58,7 +58,10 @@ public class Main {
             LOGGER.info("Страница после логина: " + login.url());
 
             for (int i = 1; i <= 5; i++) {
-                Document doc = Jsoup.connect(ConfProperties.getProperty("page" + i + "_url"))
+                String tasksPageUrl = ConfProperties.getProperty("page" + i + "_url");
+                tasksPageUrl = String.format(tasksPageUrl, EMPLOYEE_ID);
+
+                Document doc = Jsoup.connect(tasksPageUrl)
                         .userAgent(USER_AGENT)
                         .referrer(REFERRER)
                         .cookies(login.cookies())
